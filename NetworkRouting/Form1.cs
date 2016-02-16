@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using PathSolver;
 
 namespace NetworkRouting
 {
@@ -154,7 +153,7 @@ namespace NetworkRouting
             if(ready)
             {
                 clearSome();
-                int temp = PathSolver1.findShortestPath();
+                points = PathSolver.findShortestPath();
             }
         }
 

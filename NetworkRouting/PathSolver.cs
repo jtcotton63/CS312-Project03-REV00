@@ -1,9 +1,17 @@
-namespace PathSolver
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+
+namespace NetworkRouting
 {
-    public static class PathSolver1 
+    static class PathSolver
     {
-        public static int findShortestPath() {
-            return 0;
+        public static List<PointF> findShortestPath()
+        {
+            return null;
         }
+
     }
 }
