@@ -1,0 +1,33 @@
+// Available variables which can be used inside of strings.
+// ${workspaceRoot}: the root folder of the team
+// ${file}: the current opened file
+// ${fileBasename}: the current opened file's basename
+// ${fileDirname}: the current opened file's dirname
+// ${fileExtname}: the current opened file's extension
+// ${cwd}: the current working directory of the spawned process
+
+// This configuration worked for C# files on Linux
+// Note that package mono-complete was installed
+{
+	"version": "0.1.0",
+	"command": "xbuild", // See https://isimplecoder.github.io/2015/05/04/debugc%23/
+	"args": [
+		// Ask msbuild to generate full paths for file names.
+		"/property:GenerateFullPaths=true"
+	],
+	"taskSelector": "/t:",
+	"showOutput": "silent",
+	"tasks": [
+		{
+			"taskName": "build",
+			// Show the output window only if unrecognized errors occur.
+			"showOutput": "silent",
+			// Use the standard MS compiler pattern to detect errors, warnings
+			// and infos in the output.
+			"problemMatcher": [
+				"$msCompile",
+				"$lessCompile"
+			]
+		}
+	]
+}
