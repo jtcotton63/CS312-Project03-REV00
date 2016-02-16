@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
+using PathSolver;
 
 namespace NetworkRouting
 {
@@ -67,12 +63,14 @@ namespace NetworkRouting
         }
 
         // Generates the distance matrix.  Values of -1 indicate a missing edge.  Loopbacks are at a cost of 0.
-        private const int MIN_WEIGHT = 1;
-        private const int MAX_WEIGHT = 100;
-        private const double PROBABILITY_OF_DELETION = 0.35;
+        // private const int MIN_WEIGHT = 1;
+        // private const int MAX_WEIGHT = 100;
+        // private const double PROBABILITY_OF_DELETION = 0.35;
+        // private const int NUMBER_OF_ADJACENT_POINTS = 3;
 
-        private const int NUMBER_OF_ADJACENT_POINTS = 3;
-
+        /* 
+         *
+         */
         private List<HashSet<int>> generateAdjacencyList(int size, Random rand)
         {
             List<HashSet<int>> adjacencyList = new List<HashSet<int>>();
@@ -156,13 +154,8 @@ namespace NetworkRouting
             if(ready)
             {
                 clearSome();
-                solveButton_Clicked();  // Here is the new entry point
+                int temp = PathSolver1.findShortestPath();
             }
-        }
-
-        private void solveButton_Clicked()
-        {
-            // *** Implement this method, use the variables "startNodeIndex" and "stopNodeIndex" as the indices for your start and stop points, respectively ***
         }
 
         private Boolean startStopToggle = true;
