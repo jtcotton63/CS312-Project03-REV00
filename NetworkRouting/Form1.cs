@@ -153,7 +153,17 @@ namespace NetworkRouting
             if(ready)
             {
                 clearSome();
-                points = PathSolver.findShortestPath();
+                IDijkstraShortestPathSolver solver = null;
+                if(arrayCheckBox.Checked == true)
+                {
+                    solver = new ArrayImpl();
+                }
+                else
+                {
+                    solver = new HeapArrayImpl();
+                }
+                PathSolver.findShortestPath(solver);
+                
             }
         }
 
