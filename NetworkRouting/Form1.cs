@@ -156,14 +156,13 @@ namespace NetworkRouting
                 IDijkstraShortestPathSolver solver = null;
                 if(arrayCheckBox.Checked == true)
                 {
-                    solver = new ArrayImpl();
+                    solver = new ArrayImpl(points, adjacencyList);
                 }
                 else
                 {
                     solver = new HeapArrayImpl();
                 }
-                PathSolver.findShortestPath(solver);
-                
+                int[] prev = PathSolver.findShortestPath(solver, startNodeIndex);
             }
         }
 

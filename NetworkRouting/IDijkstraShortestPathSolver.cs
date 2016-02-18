@@ -10,13 +10,24 @@ namespace NetworkRouting
     {
         void makeQueue();
 
+        /*
+         * Returns the total number of elements in the queue
+         */
         int getQueueCount();
 
-        void insert();
+        void insert(int index, int weight);
 
+        /*
+         * Finds the index of the node with the smallest distance weight.
+         * Marks the value of the index of the smallest distance weight as removed.
+         * Returns the index of the smallest distance weight.
+         */
         int deleteMin();
 
-        void decreaseKey(int index);
+        /*
+         * Updates the value of the queue element at the specified index to newWeight.
+         */
+        void decreaseKey(int index, int newWeight);
 
         // Accesser methods
 
@@ -26,12 +37,12 @@ namespace NetworkRouting
 
         int getDist(int index);
 
-        int setDist(int index, int dist);
+        void setDist(int index, int dist);
 
         int getPrev(int index);
 
-        int setPrev(int index, int prevIndex);
+        void setPrev(int index, int prevIndex);
 
-        int getStopNodeIndex();
+        int[] getPrev();
     }
 }
