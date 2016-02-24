@@ -13,7 +13,7 @@ namespace NetworkRouting
             throw new NotImplementedException();
         }
 
-        void IDijkstraShortestPathQueue.insert(int index, int weight)
+        void IDijkstraShortestPathQueue.insert(int index, float weight)
         {
             throw new NotImplementedException();
         }
@@ -23,7 +23,7 @@ namespace NetworkRouting
             throw new NotImplementedException();
         }
 
-        void IDijkstraShortestPathQueue.decreaseKey(int index, int newWeight)
+        void IDijkstraShortestPathQueue.decreaseKey(int index, float newWeight)
         {
             throw new NotImplementedException();
         }

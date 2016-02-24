@@ -15,6 +15,7 @@ namespace NetworkRouting
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            Test.runTests();
             Application.Run(new Form1());
         }
     }

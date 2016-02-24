@@ -8,7 +8,7 @@ namespace NetworkRouting
 {
     static class PathSolver
     {
-        public static int NODE_LOW = -1;
+        private static int NODE_LOW = -1;
 
         public static int[] findShortestPath(IDijkstraShortestPathQueue queue, List<PointF> points, List<HashSet<int>> adjacencyList, int startNodeIndex)
         {
@@ -16,7 +16,7 @@ namespace NetworkRouting
                 throw new SystemException("List of points and adjacency list aren't the same size");
 
             // Initialize dist and prev arrays
-            int[] dist = Enumerable.Repeat(Int32.MaxValue, points.Count).ToArray();
+            float[] dist = Enumerable.Repeat(float.MaxValue, points.Count).ToArray();
             int[] prev = Enumerable.Repeat(NODE_LOW, points.Count).ToArray();
 
             // Initialize the queue with the start node value
@@ -34,7 +34,7 @@ namespace NetworkRouting
                     if (minIndex == neighborIndex || u.Equals(v))
                         throw new SystemException("Point U has a circular reference to itself");
 
-                    int alternateDistance = dist[minIndex] + calDistanceBtwnPoints(u, v);
+                    float alternateDistance = dist[minIndex] + calDistanceBtwnPoints(u, v);
                     if(alternateDistance < dist[neighborIndex])
                     {
                         dist[neighborIndex] = alternateDistance;
@@ -52,9 +52,9 @@ namespace NetworkRouting
             return prev;
         }
 
-        private static int calDistanceBtwnPoints(PointF one, PointF two)
+        public static float calDistanceBtwnPoints(PointF one, PointF two)
         {
-            throw new NotImplementedException();
+            return (float) Math.Sqrt((two.Y - one.Y) * (two.Y - one.Y) + (two.X - one.X) * (two.X - one.X));
         }
 
     }
