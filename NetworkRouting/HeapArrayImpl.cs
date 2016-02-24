@@ -1,11 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 
 namespace NetworkRouting
 {
-    class HeapArrayImpl : IDijkstraShortestPathSolver
+    class HeapArrayImpl : IDijkstraShortestPathQueue
     {
+        int IDijkstraShortestPathQueue.getQueueCount()
+        {
+            throw new NotImplementedException();
+        }
+
+        void IDijkstraShortestPathQueue.insert(int index, int weight)
+        {
+            throw new NotImplementedException();
+        }
+
+        int IDijkstraShortestPathQueue.deleteMin()
+        {
+            throw new NotImplementedException();
+        }
+
+        void IDijkstraShortestPathQueue.decreaseKey(int index, int newWeight)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

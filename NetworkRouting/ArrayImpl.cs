@@ -6,47 +6,35 @@ using System.Text;
 
 namespace NetworkRouting
 {
-    class ArrayImpl : IDijkstraShortestPathSolver
+    class ArrayImpl : IDijkstraShortestPathQueue
     {
         // The queue
         int[] queue = null;
-        int[] dist;
-        int[] prev;
 
         // Helper members
-        List<PointF> nodes = null;
-        List<HashSet<int>> adjList = null;
         int size = 0;
 
         // Other
         private int QUEUE_DEQUEUED_PLACEHOLDER = -1;
         private int QUEUE_NOT_INITIALIZED_PLACEHOLDER = Int32.MaxValue;
 
-        public ArrayImpl(List<PointF> nodes, List<HashSet<int>> adjacencyList)
+        public ArrayImpl(int numPoints)
         {
-            this.nodes = nodes;
-            this.adjList = adjacencyList;
+            this.queue = Enumerable.Repeat(QUEUE_NOT_INITIALIZED_PLACEHOLDER, numPoints).ToArray();
         }
 
-        void IDijkstraShortestPathSolver.makeQueue()
-        {
-            this.queue = Enumerable.Repeat(QUEUE_NOT_INITIALIZED_PLACEHOLDER, nodes.Count).ToArray();
-            this.dist = Enumerable.Repeat(Int32.MaxValue, nodes.Count).ToArray();
-            this.prev = Enumerable.Repeat(PathSolver.NODE_LOW, nodes.Count).ToArray();
-        }
-
-        int IDijkstraShortestPathSolver.getQueueCount()
+        int IDijkstraShortestPathQueue.getQueueCount()
         {
             return this.size;
         }
 
-        void IDijkstraShortestPathSolver.insert(int index, int weight)
+        void IDijkstraShortestPathQueue.insert(int index, int weight)
         {
             queue[index] = weight;
             this.size++;
         }
 
-        int IDijkstraShortestPathSolver.deleteMin()
+        int IDijkstraShortestPathQueue.deleteMin()
         {
             int minIndex = 0;
             int minValue = queue[minIndex];
@@ -64,7 +52,7 @@ namespace NetworkRouting
             return minIndex;
         }
 
-        void IDijkstraShortestPathSolver.decreaseKey(int index, int newWeight)
+        void IDijkstraShortestPathQueue.decreaseKey(int index, int newWeight)
         {
             // If the key is being decreased for the first time,
             // it is the same as inserting a new element into the queue.
@@ -76,39 +64,5 @@ namespace NetworkRouting
 
         }
 
-        PointF IDijkstraShortestPathSolver.getPoint(int index)
-        {
-            return nodes.ElementAt(index);
-        }
-
-        HashSet<int> IDijkstraShortestPathSolver.getNeighbors(int index)
-        {
-            return adjList.ElementAt(index);
-        }
-
-        int IDijkstraShortestPathSolver.getDist(int index)
-        {
-            return dist[index];
-        }
-
-        void IDijkstraShortestPathSolver.setDist(int index, int dist)
-        {
-            this.dist[index] = dist;
-        }
-
-        int IDijkstraShortestPathSolver.getPrev(int index)
-        {
-            return prev[index];
-        }
-
-        void IDijkstraShortestPathSolver.setPrev(int index, int prevIndex)
-        {
-            this.prev[index] = prevIndex;
-        }
-
-        int[] IDijkstraShortestPathSolver.getPrev()
-        {
-            return prev;
-        }
     }
 }

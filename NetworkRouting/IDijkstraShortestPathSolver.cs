@@ -6,10 +6,8 @@ using System.Text;
 
 namespace NetworkRouting
 {
-    interface IDijkstraShortestPathSolver
+    interface IDijkstraShortestPathQueue
     {
-        void makeQueue();
-
         /*
          * Returns the total number of elements in the queue
          */
@@ -29,20 +27,5 @@ namespace NetworkRouting
          */
         void decreaseKey(int index, int newWeight);
 
-        // Accesser methods
-
-        PointF getPoint(int index);
-
-        HashSet<int> getNeighbors(int index);
-
-        int getDist(int index);
-
-        void setDist(int index, int dist);
-
-        int getPrev(int index);
-
-        void setPrev(int index, int prevIndex);
-
-        int[] getPrev();
     }
 }

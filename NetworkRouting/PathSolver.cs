@@ -10,24 +10,36 @@ namespace NetworkRouting
     {
         public static int NODE_LOW = -1;
 
-        public static int[] findShortestPath(IDijkstraShortestPathSolver solver, int startNodeIndex)
+        public static int[] findShortestPath(IDijkstraShortestPathQueue queue, List<PointF> points, List<HashSet<int>> adjacencyList, int startNodeIndex)
         {
-            solver.makeQueue();
-            solver.insert(startNodeIndex, 0);
-            while(solver.getQueueCount() > 0)
+            if (points.Count != adjacencyList.Count)
+                throw new SystemException("List of points and adjacency list aren't the same size");
+
+            // Initialize dist and prev arrays
+            int[] dist = Enumerable.Repeat(Int32.MaxValue, points.Count).ToArray();
+            int[] prev = Enumerable.Repeat(NODE_LOW, points.Count).ToArray();
+
+            // Initialize the queue with the start node value
+            dist[startNodeIndex] = 0;
+            queue.insert(startNodeIndex, 0);
+
+            while(queue.getQueueCount() > 0)
             {
-                int minIndex = solver.deleteMin();
-                PointF u = solver.getPoint(minIndex);
-                HashSet<int> neighbors = solver.getNeighbors(minIndex);
+                int minIndex = queue.deleteMin();
+                PointF u = points[minIndex];
+                HashSet<int> neighbors = adjacencyList[minIndex];
                 foreach(int neighborIndex in neighbors)
                 {
-                    PointF v = solver.getPoint(neighborIndex);
-                    int alternateDistance = solver.getDist(minIndex) + calDistanceBtwnPoints(u, v);
-                    if(alternateDistance < solver.getDist(neighborIndex))
+                    PointF v = points[neighborIndex];
+                    if (minIndex == neighborIndex || u.Equals(v))
+                        throw new SystemException("Point U has a circular reference to itself");
+
+                    int alternateDistance = dist[minIndex] + calDistanceBtwnPoints(u, v);
+                    if(alternateDistance < dist[neighborIndex])
                     {
-                        solver.setDist(neighborIndex, alternateDistance);
-                        solver.setPrev(neighborIndex, minIndex);
-                        solver.decreaseKey(neighborIndex, alternateDistance);
+                        dist[neighborIndex] = alternateDistance;
+                        prev[neighborIndex] = minIndex;
+                        queue.decreaseKey(neighborIndex, alternateDistance);
                     }
                 }
             }
@@ -37,7 +49,7 @@ namespace NetworkRouting
             // When the queue runs out, then all the paths have been explored (that are connected to this tree anyways).
             // If the stopnode still doesn't have a prev, then the two nodes aren't connected in any way
             // Mark de-queued nodes as -1 in queue
-            return solver.getPrev();
+            return prev;
         }
 
         private static int calDistanceBtwnPoints(PointF one, PointF two)
