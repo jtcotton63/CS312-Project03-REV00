@@ -59,8 +59,10 @@ namespace NetworkRouting
             int stopNodeIndex = 5;
 
             IDijkstraShortestPathQueue arrayQ = new ArrayImpl(points.Count);
-            int[] arrayPrev = PathSolver.findShortestPath(arrayQ, points, adjacencyList, startNodeIndex);
-            int pause = -1;
+            List<int> path = PathSolver.findShortestPath(arrayQ, points, adjacencyList, startNodeIndex, stopNodeIndex);
+            string result = PathSolver.pathToString(path);
+            string expected = "3, 6, 2, 1, 4, 5";
+            Debug.Assert(expected.Equals(result));
         }
     }
 }

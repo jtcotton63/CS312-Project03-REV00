@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -153,18 +154,54 @@ namespace NetworkRouting
             if(ready)
             {
                 clearSome();
+
                 IDijkstraShortestPathQueue solver = null;
-                if(arrayCheckBox.Checked == true)
+                double arraySeconds = -1.0;
+                double heapSeconds = -1.0;
+                string timerBoxFormat = "F6";
+
+                if (arrayCheckBox.Checked == true)
                 {
                     solver = new ArrayImpl(points.Count);
-                }
-                else
-                {
-                    solver = new HeapArrayImpl();
+                    Stopwatch arrayTimer = new Stopwatch();
+                    arrayTimer.Start();
+                    List<int> arrayPath = PathSolver.findShortestPath(solver, points, adjacencyList, startNodeIndex, stopNodeIndex);
+                    arrayTimer.Stop();
+                    drawPath(arrayPath);
+                    arraySeconds = arrayTimer.Elapsed.TotalMilliseconds / 1000;
+                    arrayTimeBox.Text = arraySeconds.ToString(timerBoxFormat);
                 }
 
-                int[] prev = PathSolver.findShortestPath(solver, points, adjacencyList, startNodeIndex);
+                /* solver = new HeapArrayImpl();
+                Stopwatch heapTimer = new Stopwatch();
+                heapTimer.Start();
+                List<int> heapPath = PathSolver.findShortestPath(solver, points, adjacencyList, startNodeIndex, stopNodeIndex);
+                heapTimer.Stop();
+                heapSeconds = heapTimer.Elapsed.TotalMilliseconds / 1000;
+                heapTimeBox.Text = heapSeconds.ToString(timerBoxFormat);
+
+                // Speed up comparison
+                if (arrayCheckBox.Checked == true)
+                {
+                    differenceBox.Text = (arraySeconds / heapSeconds).ToString(timerBoxFormat);
+                } */
+
             }
+        }
+
+        private void drawPath(List<int> path)
+        {
+            Pen black = new Pen(Color.Black);
+            int curr = 0;
+            int next = 1;
+            for(int i = 0; i < path.Count - 1; i++)
+            {
+                graphics.DrawLine(black, points[path[curr]], points[path[next]]);
+                pictureBox.Invalidate();
+                curr++;
+                next++;
+            }
+
         }
 
         private Boolean startStopToggle = true;

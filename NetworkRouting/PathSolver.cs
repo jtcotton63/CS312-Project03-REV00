@@ -10,7 +10,7 @@ namespace NetworkRouting
     {
         private static int NODE_LOW = -1;
 
-        public static int[] findShortestPath(IDijkstraShortestPathQueue queue, List<PointF> points, List<HashSet<int>> adjacencyList, int startNodeIndex)
+        public static List<int> findShortestPath(IDijkstraShortestPathQueue queue, List<PointF> points, List<HashSet<int>> adjacencyList, int startNodeIndex, int stopNodeIndex)
         {
             if (points.Count != adjacencyList.Count)
                 throw new SystemException("List of points and adjacency list aren't the same size");
@@ -44,17 +44,47 @@ namespace NetworkRouting
                 }
             }
 
-            // HELP what is returned from this function? 
-            // How does the interface know the path from the start to the stop?
-            // When the queue runs out, then all the paths have been explored (that are connected to this tree anyways).
-            // If the stopnode still doesn't have a prev, then the two nodes aren't connected in any way
-            // Mark de-queued nodes as -1 in queue
-            return prev;
+            return getPathToNode(prev, stopNodeIndex);
         }
 
         public static float calDistanceBtwnPoints(PointF one, PointF two)
         {
             return (float) Math.Sqrt((two.Y - one.Y) * (two.Y - one.Y) + (two.X - one.X) * (two.X - one.X));
+        }
+
+        public static List<int> getPathToNode(int[] prev, int stopNodeIndex)
+        {
+            List<int> reverseOrder = new List<int>();
+
+            int index = stopNodeIndex;
+            while (prev[index] != NODE_LOW)
+            {
+                reverseOrder.Add(index);
+                index = prev[index];
+            }
+
+            // Make sure the first node gets added to the order
+            reverseOrder.Add(index);
+
+            reverseOrder.Reverse();
+            return reverseOrder;
+        }
+
+        public static String pathToString(List<int> order)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < order.Count; i++)
+            {
+                sb.Append(order[i]);
+                sb.Append(", ");
+            }
+
+            // Remove the , and the space left by the last iteration
+            if(sb.Length > 0)
+                sb.Remove(sb.Length - 2, 2);
+
+            return sb.ToString();
         }
 
     }
