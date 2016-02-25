@@ -15,7 +15,7 @@ namespace NetworkRouting
         int size = 0;
 
         // Other
-        private int QUEUE_DEQUEUED_PLACEHOLDER = -1;
+        private float QUEUE_DEQUEUED_PLACEHOLDER = -1;
         private float QUEUE_NOT_INITIALIZED_PLACEHOLDER = float.MaxValue;
 
         public ArrayImpl(int numPoints)
@@ -36,16 +36,21 @@ namespace NetworkRouting
 
         int IDijkstraShortestPathQueue.deleteMin()
         {
-            int minIndex = 0;
-            float minValue = queue[minIndex];
+            int minIndex = -1;
+            float minValue = QUEUE_NOT_INITIALIZED_PLACEHOLDER;
             for(int i = 0; i < queue.Length; i++)
             {
-                if(queue[i] < minValue)
+                // The value of queue[i] has to be gte 0
+                // bc -1 indicates that a node has alredy been popped
+                if(queue[i] >= 0 && queue[i] < minValue)
                 {
                     minValue = queue[i];
                     minIndex = i;
                 }
             }
+
+            if (minIndex == -1)
+                throw new SystemException("The minIndex was not initialized; nothing to pop on the queue");
 
             queue[minIndex] = QUEUE_DEQUEUED_PLACEHOLDER;
             this.size--;
