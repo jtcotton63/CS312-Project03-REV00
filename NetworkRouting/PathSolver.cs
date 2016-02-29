@@ -21,11 +21,11 @@ namespace NetworkRouting
 
             // Initialize the queue with the start node value
             dist[startNodeIndex] = 0;
-            queue.insert(startNodeIndex, 0);
+            queue.insert(startNodeIndex);
 
             while(queue.getQueueCount() > 0)
             {
-                int minIndex = queue.deleteMin();
+                int minIndex = queue.deleteMin(dist);
                 PointF u = points[minIndex];
                 HashSet<int> neighbors = adjacencyList[minIndex];
                 foreach(int neighborIndex in neighbors)
@@ -39,7 +39,7 @@ namespace NetworkRouting
                     {
                         dist[neighborIndex] = alternateDistance;
                         prev[neighborIndex] = minIndex;
-                        queue.decreaseKey(neighborIndex, alternateDistance);
+                        queue.decreaseKey(neighborIndex, dist);
                     }
                 }
             }

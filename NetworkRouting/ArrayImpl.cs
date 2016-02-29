@@ -23,18 +23,19 @@ namespace NetworkRouting
             this.queue = Enumerable.Repeat(QUEUE_NOT_INITIALIZED_PLACEHOLDER, numPoints).ToArray();
         }
 
-        int IDijkstraShortestPathQueue.getQueueCount()
+        public int getQueueCount()
         {
             return this.size;
         }
 
-        void IDijkstraShortestPathQueue.insert(int index, float weight)
+        public void insert(int index)
         {
-            queue[index] = weight;
+            queue[index] = 0;
             this.size++;
         }
 
-        int IDijkstraShortestPathQueue.deleteMin()
+        // dist array intentionally ignored in this implementation of this function
+        public int deleteMin(float[] dist)
         {
             int minIndex = -1;
             float minValue = QUEUE_NOT_INITIALIZED_PLACEHOLDER;
@@ -57,7 +58,7 @@ namespace NetworkRouting
             return minIndex;
         }
 
-        void IDijkstraShortestPathQueue.decreaseKey(int index, float newWeight)
+        public void decreaseKey(int index, float[] dist)
         {
             // If the key is being decreased for the first time,
             // it is the same as inserting a new element into the queue.
@@ -65,7 +66,7 @@ namespace NetworkRouting
             if (queue[index] == QUEUE_NOT_INITIALIZED_PLACEHOLDER)
                 this.size++;
 
-            queue[index] = newWeight;
+            queue[index] = dist[index];
 
         }
 

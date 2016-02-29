@@ -156,36 +156,47 @@ namespace NetworkRouting
                 clearSome();
 
                 IDijkstraShortestPathQueue solver = null;
+                List<int> arrayPath = null;
                 double arraySeconds = -1.0;
                 double heapSeconds = -1.0;
                 string timerBoxFormat = "F6";
 
-                if (arrayCheckBox.Checked == true)
+                // Run the array implementation
+                if (arrayCheckBox.Checked)
                 {
                     solver = new ArrayImpl(points.Count);
                     Stopwatch arrayTimer = new Stopwatch();
                     arrayTimer.Start();
-                    List<int> arrayPath = PathSolver.findShortestPath(solver, points, adjacencyList, startNodeIndex, stopNodeIndex);
+                    arrayPath = PathSolver.findShortestPath(solver, points, adjacencyList, startNodeIndex, stopNodeIndex);
                     arrayTimer.Stop();
                     drawPath(arrayPath);
                     arraySeconds = arrayTimer.Elapsed.TotalMilliseconds / 1000;
-                    arrayTimeBox.Text = arraySeconds.ToString(timerBoxFormat);
                 }
 
-                /* solver = new HeapArrayImpl();
+                // Run the heap implementation
+                /*solver = new HeapArrayImpl(points.Count);
                 Stopwatch heapTimer = new Stopwatch();
                 heapTimer.Start();
                 List<int> heapPath = PathSolver.findShortestPath(solver, points, adjacencyList, startNodeIndex, stopNodeIndex);
                 heapTimer.Stop();
                 heapSeconds = heapTimer.Elapsed.TotalMilliseconds / 1000;
+
+                // Verify that both got the same paths
+                if (arrayCheckBox.Checked)
+                    verifyDifferentImplementationPaths(arrayPath, heapPath);
+
+                // Draw the path
+                drawPath(heapPath);
+
+                // Set the appropriate times
+                if (arrayCheckBox.Checked)
+                    arrayTimeBox.Text = arraySeconds.ToString(timerBoxFormat);
                 heapTimeBox.Text = heapSeconds.ToString(timerBoxFormat);
 
                 // Speed up comparison
-                if (arrayCheckBox.Checked == true)
-                {
+                if (arrayCheckBox.Checked)
                     differenceBox.Text = (arraySeconds / heapSeconds).ToString(timerBoxFormat);
-                } */
-
+                */
             }
         }
 
@@ -202,6 +213,15 @@ namespace NetworkRouting
                 next++;
             }
 
+        }
+
+        private void verifyDifferentImplementationPaths(List<int> path1, List<int> path2)
+        {
+            Debug.Assert(path1.Count == path2.Count);
+
+            for(int i = 0; i < path1.Count; i++)
+                Debug.Assert(path1[i] == path2[i]);
+                
         }
 
         private Boolean startStopToggle = true;

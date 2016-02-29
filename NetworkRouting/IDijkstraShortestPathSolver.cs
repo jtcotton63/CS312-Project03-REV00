@@ -13,19 +13,22 @@ namespace NetworkRouting
          */
         int getQueueCount();
 
-        void insert(int index, float weight);
+        /*
+         * For inserting the first node into the queue
+         */
+        void insert(int index);
 
         /*
          * Finds the index of the node with the smallest distance weight.
          * Marks the value of the index of the smallest distance weight as removed.
-         * Returns the index of the smallest distance weight.
+         * Returns the node with the smallest distance weight.
          */
-        int deleteMin();
+        int deleteMin(float[] dist);
 
         /*
          * Updates the value of the queue element at the specified index to newWeight.
          */
-        void decreaseKey(int index, float newWeight);
+        void decreaseKey(int index, float[] dist);
 
     }
 }
