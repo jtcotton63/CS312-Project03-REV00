@@ -169,12 +169,11 @@ namespace NetworkRouting
                     arrayTimer.Start();
                     arrayPath = PathSolver.findShortestPath(solver, points, adjacencyList, startNodeIndex, stopNodeIndex);
                     arrayTimer.Stop();
-                    drawPath(arrayPath);
                     arraySeconds = arrayTimer.Elapsed.TotalMilliseconds / 1000;
                 }
 
                 // Run the heap implementation
-                /*solver = new HeapArrayImpl(points.Count);
+                solver = new HeapArrayImpl(points.Count);
                 Stopwatch heapTimer = new Stopwatch();
                 heapTimer.Start();
                 List<int> heapPath = PathSolver.findShortestPath(solver, points, adjacencyList, startNodeIndex, stopNodeIndex);
@@ -196,8 +195,16 @@ namespace NetworkRouting
                 // Speed up comparison
                 if (arrayCheckBox.Checked)
                     differenceBox.Text = (arraySeconds / heapSeconds).ToString(timerBoxFormat);
-                */
             }
+        }
+
+        private void verifyDifferentImplementationPaths(List<int> path1, List<int> path2)
+        {
+            Debug.Assert(path1.Count == path2.Count);
+
+            for (int i = 0; i < path1.Count; i++)
+                Debug.Assert(path1[i] == path2[i]);
+
         }
 
         private void drawPath(List<int> path)
@@ -205,23 +212,25 @@ namespace NetworkRouting
             Pen black = new Pen(Color.Black);
             int curr = 0;
             int next = 1;
-            for(int i = 0; i < path.Count - 1; i++)
+            for (int i = 0; i < path.Count - 1; i++)
             {
+                PointF u = points[path[curr]];
+                PointF v = points[path[next]];
                 graphics.DrawLine(black, points[path[curr]], points[path[next]]);
-                pictureBox.Invalidate();
+                graphics.DrawString(String.Format("{0}", (int) PathSolver.calDistanceBtwnPoints(u, v)), 
+                    SystemFonts.DefaultFont, Brushes.Black, calcMidpoint(u, v));
                 curr++;
                 next++;
             }
-
+            
+            pictureBox.Invalidate();
         }
 
-        private void verifyDifferentImplementationPaths(List<int> path1, List<int> path2)
+        private PointF calcMidpoint(PointF u, PointF v)
         {
-            Debug.Assert(path1.Count == path2.Count);
-
-            for(int i = 0; i < path1.Count; i++)
-                Debug.Assert(path1[i] == path2[i]);
-                
+            float x = (u.X + v.X) / 2;
+            float y = (u.Y + v.Y) / 2;
+            return new PointF(x, y);
         }
 
         private Boolean startStopToggle = true;
