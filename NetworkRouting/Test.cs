@@ -59,11 +59,11 @@ namespace NetworkRouting
             int startNodeIndex = 3;
             int stopNodeIndex = 5;
 
-            /*IDijkstraShortestPathQueue arrayQ = new ArrayImpl(points.Count);
+            IDijkstraShortestPathQueue arrayQ = new ArrayImpl(points.Count);
             List<int> path = PathSolver.findShortestPath(arrayQ, points, adjacencyList, startNodeIndex, stopNodeIndex);
             string result = PathSolver.pathToString(path);
             string expected = "3, 6, 2, 1, 4, 5";
-            Debug.Assert(expected.Equals(result));*/
+            Debug.Assert(expected.Equals(result));
         }
 
         private static void testBasic2()
@@ -128,16 +128,19 @@ namespace NetworkRouting
             int startNodeIndex = 3;
             int stopNodeIndex = 7;
 
+            string expected = "3, 0, 7";
+
             // Array test
-            //IDijkstraShortestPathQueue arrayQ = new ArrayImpl(points.Count);
-            //List<int> arrayPath = PathSolver.findShortestPath(arrayQ, points, adjacencyList, startNodeIndex, stopNodeIndex);
-            //string expected = PathSolver.pathToString(arrayPath);
+            IDijkstraShortestPathQueue arrayQ = new ArrayImpl(points.Count);
+            List<int> arrayPath = PathSolver.findShortestPath(arrayQ, points, adjacencyList, startNodeIndex, stopNodeIndex);
+            string arrayResult = PathSolver.pathToString(arrayPath);
+            Debug.Assert(expected.Equals(arrayResult));
 
             // Heap test
             IDijkstraShortestPathQueue heapQ = new HeapArrayImpl(points.Count);
             List<int> heapPath = PathSolver.findShortestPath(heapQ, points, adjacencyList, startNodeIndex, stopNodeIndex);
-            string result = PathSolver.pathToString(heapPath);
-            //Debug.Assert(expected.Equals(result));
+            string heapResult = PathSolver.pathToString(heapPath);
+            Debug.Assert(expected.Equals(heapResult));
         }
     }
 }

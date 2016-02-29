@@ -19,7 +19,6 @@ namespace NetworkRouting
 
         // Other
         private int HEAP_OPEN_SPACE_PLACEHOLDER = -1;
-        private int PARENT_INDEX_LIMIT_MARKER = -1;
 
         public HeapArrayImpl(int numPoints)
         {
@@ -53,8 +52,8 @@ namespace NetworkRouting
             {
                 int child1Index = getHeapChild1Index(nodeIndex);
                 int child2Index = getHeapChild2Index(nodeIndex);
-                bool hasChild1 = heap[child1Index] != HEAP_OPEN_SPACE_PLACEHOLDER;
-                bool hasChild2 = heap[child2Index] != HEAP_OPEN_SPACE_PLACEHOLDER;
+                bool hasChild1 = child1Index >= 0 && heap[child1Index] != HEAP_OPEN_SPACE_PLACEHOLDER;
+                bool hasChild2 = child2Index >= 0 && heap[child2Index] != HEAP_OPEN_SPACE_PLACEHOLDER;
 
                 if(hasChild1 && hasChild2)
                 {
@@ -157,7 +156,7 @@ namespace NetworkRouting
         private int getParentIndex(int currIndex)
         {
             if (currIndex == 0)
-                return PARENT_INDEX_LIMIT_MARKER;
+                return -1;
 
             return (currIndex - 1) / 2;
         }
@@ -167,7 +166,7 @@ namespace NetworkRouting
         {
             int child1Index = (2 * currIndex) + 1;
             if (child1Index >= heap.Length)
-                throw new SystemException("Heap parent at index " + currIndex + " attempted to retrieve child at an index outside of heap bounds");
+                return -1;
 
             return child1Index;
         }
@@ -177,7 +176,7 @@ namespace NetworkRouting
         {
             int child2Index = (2 * currIndex) + 2;
             if (child2Index >= heap.Length)
-                throw new SystemException("Heap parent at index " + currIndex + " attempted to retrieve child at an index outside of heap bounds");
+                return -1;
 
             return child2Index;
         }
