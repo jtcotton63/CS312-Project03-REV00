@@ -62,15 +62,6 @@ namespace NetworkRouting
             this.points = points;
         }
 
-        // Generates the distance matrix.  Values of -1 indicate a missing edge.  Loopbacks are at a cost of 0.
-        // private const int MIN_WEIGHT = 1;
-        // private const int MAX_WEIGHT = 100;
-        // private const double PROBABILITY_OF_DELETION = 0.35;
-        // private const int NUMBER_OF_ADJACENT_POINTS = 3;
-
-        /* 
-         *
-         */
         private List<HashSet<int>> generateAdjacencyList(int size, Random rand)
         {
             List<HashSet<int>> adjacencyList = new List<HashSet<int>>();
@@ -180,21 +171,30 @@ namespace NetworkRouting
                 heapTimer.Stop();
                 heapSeconds = heapTimer.Elapsed.TotalMilliseconds / 1000;
 
-                // Verify that both got the same paths
-                if (arrayCheckBox.Checked)
-                    verifyDifferentImplementationPaths(arrayPath, heapPath);
+                // If the list is null, then there isn't a path to the specified node
+                if(heapPath == null)
+                {
+                    pathCostBox.Text = "NO PATH";
+                }
+                else
+                {
+                    // Verify that both got the same paths
+                    if (arrayCheckBox.Checked)
+                        verifyDifferentImplementationPaths(arrayPath, heapPath);
 
-                // Draw the path
-                drawPath(heapPath);
+                    // Draw the path
+                    float pathCost = drawPath(heapPath);
+                    pathCostBox.Text = pathCost.ToString(timerBoxFormat);
 
-                // Set the appropriate times
-                if (arrayCheckBox.Checked)
-                    arrayTimeBox.Text = arraySeconds.ToString(timerBoxFormat);
-                heapTimeBox.Text = heapSeconds.ToString(timerBoxFormat);
+                    // Set the appropriate times
+                    if (arrayCheckBox.Checked)
+                        arrayTimeBox.Text = arraySeconds.ToString(timerBoxFormat);
+                    heapTimeBox.Text = heapSeconds.ToString(timerBoxFormat);
 
-                // Speed up comparison
-                if (arrayCheckBox.Checked)
-                    differenceBox.Text = (arraySeconds / heapSeconds).ToString(timerBoxFormat);
+                    // Speed up comparison
+                    if (arrayCheckBox.Checked)
+                        differenceBox.Text = (arraySeconds / heapSeconds).ToString(timerBoxFormat);
+                }
             }
         }
 
@@ -207,23 +207,27 @@ namespace NetworkRouting
 
         }
 
-        private void drawPath(List<int> path)
+        private float drawPath(List<int> path)
         {
             Pen black = new Pen(Color.Black);
             int curr = 0;
             int next = 1;
+            float pathCost = 0F;
             for (int i = 0; i < path.Count - 1; i++)
             {
                 PointF u = points[path[curr]];
                 PointF v = points[path[next]];
                 graphics.DrawLine(black, points[path[curr]], points[path[next]]);
-                graphics.DrawString(String.Format("{0}", (int) PathSolver.calDistanceBtwnPoints(u, v)), 
+                float segmentCost = PathSolver.calcDistanceBtwnPoints(u, v);
+                pathCost += segmentCost;
+                graphics.DrawString(String.Format("{0}", (int) segmentCost), 
                     SystemFonts.DefaultFont, Brushes.Black, calcMidpoint(u, v));
                 curr++;
                 next++;
             }
             
             pictureBox.Invalidate();
+            return pathCost;
         }
 
         private PointF calcMidpoint(PointF u, PointF v)

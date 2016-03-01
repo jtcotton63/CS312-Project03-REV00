@@ -20,7 +20,7 @@ namespace NetworkRouting
         {
             PointF one = new PointF(5.0F, 0.0F);
             PointF two= new PointF(0.0F, 4.0F);
-            float result = PathSolver.calDistanceBtwnPoints(one, two);
+            float result = PathSolver.calcDistanceBtwnPoints(one, two);
             Debug.Assert((int) result == 6);
         }
 

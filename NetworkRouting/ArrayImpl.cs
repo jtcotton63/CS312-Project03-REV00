@@ -13,8 +13,6 @@ namespace NetworkRouting
 
         // Helper members
         int size = 0;
-
-        // Other
         private float QUEUE_DEQUEUED_PLACEHOLDER = -1;
         private float QUEUE_NOT_INITIALIZED_PLACEHOLDER = float.MaxValue;
 

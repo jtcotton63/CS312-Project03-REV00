@@ -8,16 +8,19 @@ namespace NetworkRouting
 {    
     class HeapArrayImpl : IDijkstraShortestPathQueue
     {
-        // The heap
+        /* 
+         * The heap stores the elements that have the least distance weight at heap[0].
+         * The heap acts as a binary tree, which each node's parent being a node that has
+         * a smaller distance weight than that of the current node.
+         */
         int[] heap = null;
 
         // The location dictionary tells where the specified node is located in the heap.
+        // Each pair {x, y} indicates that node x can be found in the heap at heap[y].
         Dictionary<int, int> location = null;
         
         // Helper members
         int insertionIndex = 0;
-
-        // Other
         private int HEAP_OPEN_SPACE_PLACEHOLDER = -1;
 
         public HeapArrayImpl(int numPoints)
@@ -31,6 +34,7 @@ namespace NetworkRouting
             return this.location.Count;
         }
 
+        // Places the root node in the heap at heap[0]
         public void insert(int node)
         {
             heap[0] = node;
@@ -38,6 +42,13 @@ namespace NetworkRouting
             insertionIndex++;
         }
 
+       /*
+        * Removes the node at heap[0] and returns it.
+        *
+        * Replaces the missing node at heap[0] with the child node that has the next smallest
+        * distance weight. Likewise, fills the empoty spot left by the child being moved up with
+        * its child that has the smallest distance weight. This is repeated until a node with no children is found.
+        */
         public int deleteMin(float[] dist)
         {
             // The first node is the node with the smallest distance
@@ -87,6 +98,13 @@ namespace NetworkRouting
             return minNode;
         }
 
+       /*
+        * Performs two functions:
+        * 1) If a node doesn't exist in the heap, adds it in the next available position
+        *    where it will have a parent node. After doing this, proceeds to part 2).
+        * 2) Relocates the node in the heap. The node should only come after nodes that have
+        *    smaller distances so that they are removed least-distance-weight first.
+        */
         public void decreaseKey(int node, float[] dist)
         {
             int newNodeInsertionIndex;
@@ -124,6 +142,13 @@ namespace NetworkRouting
             balanceHeapBottomUp(newNodeInsertionIndex, dist);
         }
 
+       /*
+        * Determines if the node at the given index has a parent that has a
+        * smaller distance weight. If so, the parent is moved to the current node's
+        * position, and the current node is put in the parent's position.
+        * This process is repeated until the given node is the root node or
+        * has a parent that has a smaller distance weight than it does.
+        */
         private void balanceHeapBottomUp(int nodeIndex, float[] dist)
         {
             int parentIndex = getParentIndex(nodeIndex);
@@ -152,6 +177,8 @@ namespace NetworkRouting
         * Returns the index of currIndex's parent in the heap.
         * The parent index of any given index in the heap is located
         * at floor((currIndex - 1) / 2)
+        * 
+        * Returns -1 if the node has no parent.
         */
         private int getParentIndex(int currIndex)
         {
@@ -162,6 +189,7 @@ namespace NetworkRouting
         }
 
         // Child 1 is located at 2 * index + 1
+        // Returns -1 if the node has no child.
         private int getHeapChild1Index(int currIndex)
         {
             int child1Index = (2 * currIndex) + 1;
@@ -172,6 +200,7 @@ namespace NetworkRouting
         }
 
         // Child 2 is located at 2 * index + 2
+        // Returns -1 if the node has no child.
         private int getHeapChild2Index(int currIndex)
         {
             int child2Index = (2 * currIndex) + 2;
